@@ -97,11 +97,11 @@ def compare_distributions(df1, df2, player: str, map_ids):
         else:
             fig1.add_trace(go.Histogram(x= temp1['kd_diff'], 
                                         histnorm= 'probability density', 
-                                        name= 'Actual kd_diff',
+                                        name= 'Actual kd_diff ' + map_id,
                                         marker_color= colors[i]))
 
             fig1.add_trace(go.Scatter(x= temp2['kd_x'].iloc[0], y= temp2['kd_dist'].iloc[0],
-                                            name= 'Theoretical kd_diff',
+                                            name= 'Theoretical kd_diff ' + map_id,
                                             line=dict(color=colors[i])))
 
             
@@ -109,21 +109,21 @@ def compare_distributions(df1, df2, player: str, map_ids):
             fig2.add_trace(go.Histogram(x= temp1['assists'], 
                                             histnorm= 'probability', 
                                             xbins=dict(start=-0.5, end=max_assists + 0.5, size=1),
-                                            name= 'Actual assists',
+                                            name= 'Actual assists ' + map_id,
                                             marker_color= colors[i]))
             
             fig2.add_trace(go.Scatter(x= temp2['assists_x'].iloc[0], y= temp2['assists_dist'].iloc[0],
-                                                name= 'Theoretical assists',
+                                                name= 'Theoretical assists ' + map_id,
                                                 line=dict(color=colors[i])))
 
             
             fig3.add_trace(go.Histogram(x= temp1['kast_pct'], 
                                             histnorm= 'probability density', 
-                                            name= 'Actual kast_pct',
+                                            name= 'Actual kast_pct ' + map_id,
                                             marker_color= colors[i]))
             
             fig3.add_trace(go.Scatter(x= temp2['kast_x'].iloc[0], y= temp2['kast_dist'].iloc[0], 
-                                                name= 'Theoretical kast_pct',
+                                                name= 'Theoretical kast_pct ' + map_id,
                                                 line=dict(color=colors[i])))
 
             print(f"Actual vs Theoretical distributions for {player} on {map_id}.")
