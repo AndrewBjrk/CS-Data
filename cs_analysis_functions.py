@@ -1,6 +1,7 @@
 import pandas as pd
 import numpy as np
 import plotly.graph_objects as go
+import plotly.express as px
 from scipy.stats import poisson
 
 def stats_analysis(df, list_players, maps):
@@ -80,36 +81,52 @@ def player_distribution_creater(df, list_players, maps):
     return return_df
 
 
-def compare_distributions(df1, df2, player: str, map_id: str):
-     df1 = df1.loc[((df1['player'] == player) & (df1['map'] == map_id))]
-     df2 = df2.loc[((df2['player'] == player) & (df2['map'] == map_id))]
+def compare_distributions(df1, df2, player: str, map_ids):
+    fig1 = go.Figure()
+    fig2 = go.Figure()
+    fig3 = go.Figure()
 
-     fig1 = go.Figure()
-     fig1.add_trace(go.Histogram(x= df1['kd_diff'], 
-                                histnorm= 'probability density', 
-                                name= 'Actual kd_diff'))
+    i = 0
+    for map_id in map_ids:
+        colors = px.colors.qualitative.Plotly
+        temp1 = df1.loc[((df1['player'] == player) & (df1['map'] == map_id))]
+        temp2 = df2.loc[((df2['player'] == player) & (df2['map'] == map_id))]
 
-     fig1.add_trace(go.Scatter(x= df2['kd_x'].iloc[0], y= df2['kd_dist'].iloc[0],
-                                     name= 'Theoretical kd_diff'))
+        if temp1.empty or temp2.empty:
+            print(f"{player} has no recorded history on {map_id}; skipping {map_id}.")
+        else:
+            fig1.add_trace(go.Histogram(x= temp1['kd_diff'], 
+                                        histnorm= 'probability density', 
+                                        name= 'Actual kd_diff',
+                                        marker_color= colors[i]))
 
-     fig2 = go.Figure()
-     max_assists = df1['assists'].max()
-     fig2.add_trace(go.Histogram(x= df1['assists'], 
-                                     histnorm= 'probability', 
-                                     xbins=dict(start=-0.5, end=max_assists + 0.5, size=1),
-                                     name= 'Actual assists'))
-     
-     fig2.add_trace(go.Scatter(x= df2['assists_x'].iloc[0], y= df2['assists_dist'].iloc[0],
-                                          name= 'Theoretical assists'))
+            fig1.add_trace(go.Scatter(x= temp2['kd_x'].iloc[0], y= temp2['kd_dist'].iloc[0],
+                                            name= 'Theoretical kd_diff',
+                                            line=dict(color=colors[i])))
 
-     fig3 = go.Figure()
-     fig3.add_trace(go.Histogram(x= df1['kast_pct'], 
-                                     histnorm= 'probability density', 
-                                     name= 'Actual kast_pct'))
-     
-     fig3.add_trace(go.Scatter(x= df2['kast_x'].iloc[0], y= df2['kast_dist'].iloc[0], 
-                                          name= 'Theoretical kast_pct'))
+            
+            max_assists = temp1['assists'].max()
+            fig2.add_trace(go.Histogram(x= temp1['assists'], 
+                                            histnorm= 'probability', 
+                                            xbins=dict(start=-0.5, end=max_assists + 0.5, size=1),
+                                            name= 'Actual assists',
+                                            marker_color= colors[i]))
+            
+            fig2.add_trace(go.Scatter(x= temp2['assists_x'].iloc[0], y= temp2['assists_dist'].iloc[0],
+                                                name= 'Theoretical assists',
+                                                line=dict(color=colors[i])))
 
-     print(f"Actual vs Theoretical distributions for {player} on {map_id}.")
+            
+            fig3.add_trace(go.Histogram(x= temp1['kast_pct'], 
+                                            histnorm= 'probability density', 
+                                            name= 'Actual kast_pct',
+                                            marker_color= colors[i]))
+            
+            fig3.add_trace(go.Scatter(x= temp2['kast_x'].iloc[0], y= temp2['kast_dist'].iloc[0], 
+                                                name= 'Theoretical kast_pct',
+                                                line=dict(color=colors[i])))
 
-     return fig1, fig2, fig3
+            print(f"Actual vs Theoretical distributions for {player} on {map_id}.")
+            i += 1
+
+    return fig1, fig2, fig3

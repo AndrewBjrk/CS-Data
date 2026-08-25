@@ -36,14 +36,14 @@ players, maps = st.columns(2)
 with players:
     player = st.selectbox('Player Name', all_players)
 with maps:
-    map_id = st.selectbox('Map Name', all_maps)
+    map_ids = st.multiselect('Map Name', all_maps)
 
 distribution_data = load_distributions()
 if st.button("Display Actual vs. Theoretical Distributions"):
-    if not player or not map_id:
+    if not player or not map_ids:
         st.error("Please select a Player or a Map to proceed")
     else:
-        fig1, fig2, fig3 = compare_distributions(raw_data, distribution_data, player, map_id)
+        fig1, fig2, fig3 = compare_distributions(raw_data, distribution_data, player, map_ids)
         st.plotly_chart(fig1)
         st.plotly_chart(fig2)
         st.plotly_chart(fig3)
