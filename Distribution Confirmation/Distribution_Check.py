@@ -1,7 +1,7 @@
 import pandas as pd
 import numpy as np
 from scipy import stats
-from scipy.stats import poisson, chi2, chisquare
+from scipy.stats import poisson, chi2, chisquare, nbinom
 
 data_path = "~/Desktop/CS Data/hltv_match_data_final.csv"
 raw_data = pd.read_csv(data_path)
@@ -11,7 +11,6 @@ raw_data = raw_data[['match_id', 'game_id', 'match_url', 'date', 'team', 'player
 player_ids = raw_data['player'].to_list()
 player_ids = list(dict.fromkeys(player_ids))
 map_ids = ['Ancient', 'Anubis', 'Dust2', 'Inferno', 'Mirage', 'Nuke']
-
 
 #Test normality of kd_diff & kast_pct distributions
 
@@ -76,7 +75,7 @@ final_df = pd.DataFrame(fdict)
 final_df.to_csv('~/Desktop/CS Data/Distribution Confirmation/reject_pcts.csv', index= False)
 '''
 
-#Test assists distribution for Poisson compatability
+#Test assists distribution for Poisson / NB
 
 def possion_dispersion_test(df):
     n = len(df)
@@ -105,6 +104,32 @@ def poisson_chisquare_gof(df, min_expected=5):
     e *= o.sum() / e.sum()
     stat, p = chisquare(o, e, ddof= 1)
     return stat, p, len(e)
+
+def nb_chisquare_gof(df, min_expected=5):
+    n = len(df['assists'])
+    xbar = df['assists'].mean()
+    s2 = df['assists'].var(ddof= 1)
+    if s2 <= xbar: # Not overdispersed -> Poisson
+        return np.nan, np.nan, 0, np.nan
+    r = xbar**2 / (s2 - xbar)
+    p = r / (r + xbar)
+    kmax = int(df['assists'].max())
+    obs = np.bincount(df['assists'], minlength= kmax + 1).astype(float)
+    exp = np.empty(kmax + 1)
+    exp[:kmax] = n * nbinom.pmf(np.arange(kmax), r, p)
+    exp[kmax] = n * nbinom.sf(kmax - 1, r, p)
+
+    o, e = list(obs), list(exp)
+    while len(e) > 3 and e[-1] < min_expected:
+        e[-2] += e[-1]; o[-2] += o[-1]; e.pop(); o.pop()
+    while len(e) > 3 and e[0] < min_expected:
+        e[1] += e[0]; o[1] += o[0]; e.pop(0); o.pop(0)
+
+    o, e = np.array(o), np.array(e)
+    e *= o.sum() / e.sum()
+    stat, pval = chisquare(o, e, ddof= 2)
+    return stat, pval, len(e), 1.0 / r
+
 '''
 rng = np.random.default_rng()
 ints = rng.integers(low=0, high= (len(player_ids)), size= 300).tolist()
@@ -119,17 +144,22 @@ for position in ints:
         else:
             D, p_disp, vmr = possion_dispersion_test(temp2)
             chi_stat, p_chi, nbins = poisson_chisquare_gof(temp2)
+            nb_stat, p_nb, nb_bins, alpha_hat = nb_chisquare_gof(temp2)
             fin.append({'player' : player, 'map' : map_id, 'N' : len(temp2),
                         'lambda' : temp2['assists'].mean(), 'VMR' : vmr,
                         'Disp_Stat' : D, 'P_disp' : p_disp, 
                         'Chi_stat' : chi_stat, 'P_chi' : p_chi, 'n_bins' : nbins,
                         'reject_disp' : int(p_disp < 0.05),
-                        'reject_chi' : int(p_chi < 0.05)})
+                        'reject_chi' : int(p_chi < 0.05),
+                        'NB_stat' : nb_stat, 'P_nb' : p_nb,
+                        'alpha_hat' : alpha_hat,
+                        'nb_defined' : int(not np.isnan(p_nb)),
+                        'reject_nb' : (np.nan if np.isnan(p_nb) else int(p_nb < 0.05))})
 final_df = pd.DataFrame(fin)
 final_df.to_csv('~/Desktop/CS Data/Distribution Confirmation/assists_run_4.csv', index= False)
 '''
 
-'''
+
 run1 = pd.read_csv('~/Desktop/CS Data/Distribution Confirmation/assists_run_1.csv')
 run2 = pd.read_csv('~/Desktop/CS Data/Distribution Confirmation/assists_run_2.csv')
 run3 = pd.read_csv('~/Desktop/CS Data/Distribution Confirmation/assists_run_3.csv')
@@ -143,14 +173,14 @@ for map_id in map_ids:
                 'Total Sample Size' : temp['N'].sum(),
                 '#_Cells' : len(temp),
                 'Rejected_disp_%' : temp['reject_disp'].mean() * 100,
-                'Rejected_chi_%' : temp['reject_chi'].mean() * 100,
+                'Rejected_chi_pois_%' : temp['reject_chi'].mean() * 100,
                 'Mean_VMR' : temp['VMR'].mean(),
                 'Median_VMR' : temp['VMR'].median(),
-                'Overdispersed_%' : (temp['VMR'] > 1).mean() * 100})
+                'Overdispersed_%' : (temp['VMR'] > 1).mean() * 100,
+                'Rejected_nb_%' : temp['reject_nb'].mean() * 100,
+                'NB_defined_%' : temp['nb_defined'].mean() * 100,
+                'Mean_alpha' : temp['alpha_hat'].mean(),
+                'Median_alpha' : temp['alpha_hat'].median()})
 final_df = pd.DataFrame(out)
 final_df.to_csv('~/Desktop/CS Data/Distribution Confirmation/assists_reject_pcts.csv', index= False)
 
-assists_rejects_pcts.csv shows that assists do NOT follow a Poisson distribution. They are consistently overdispersed,
-meaning it makes sense to test for a Negative Binomial Distribution instead. 
-These files are moved to /Poisson Disproven/ for clarity.
-'''
