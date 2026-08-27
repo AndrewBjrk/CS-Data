@@ -2,7 +2,7 @@ import pandas as pd
 import numpy as np
 import plotly.graph_objects as go
 import plotly.express as px
-from scipy.stats import poisson
+from scipy.stats import poisson, chi2, chisquare
 
 def stats_analysis(df, list_players, maps):
     return_df = pd.DataFrame()
