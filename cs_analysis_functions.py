@@ -2,7 +2,7 @@ import pandas as pd
 import numpy as np
 import plotly.graph_objects as go
 import plotly.express as px
-from scipy.stats import poisson, chi2, chisquare
+from scipy.stats import poisson, chi2, chisquare, nbinom
 
 def stats_analysis(df, list_players, maps):
     return_df = pd.DataFrame()
@@ -60,9 +60,17 @@ def player_distribution_creater(df, list_players, maps):
                 ldists_kd += [dist_kd]
 
                 avg_assists = temp2['avg_assists'].iloc[0]
-                x_assists = np.arange(0, int(avg_assists + 4*np.sqrt(avg_assists)) + 1)
+                std_assists = temp2['std_assists'].iloc[0]
+                var_assists = std_assists ** 2
+                if var_assists > avg_assists:
+                    r_assists = avg_assists**2 / (var_assists - avg_assists)
+                    p_assists = r_assists / (r_assists + avg_assists)
+                    x_assists = np.arange(0, int(avg_assists + 4 * std_assists) + 1)
+                    dist_assists = nbinom.pmf(x_assists, r_assists, p_assists)
+                else:
+                    x_assists = np.arange(0, int(avg_assists + 4 * np.sqrt(avg_assists)) + 1)
+                    dist_assists = poisson.pmf(x_assists, mu= avg_assists)
                 l_assists_x += [x_assists]
-                dist_assists = poisson.pmf(x_assists, mu= avg_assists)
                 ldists_assists += [dist_assists]
 
                 avg_kast, std_kast = temp2['avg_kast'].iloc[0], temp2['std_kast'].iloc[0]
