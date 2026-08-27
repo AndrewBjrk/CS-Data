@@ -52,10 +52,10 @@ final_df['reject_kd'] = (final_df['P_kd'] < 0.05).astype(int)
 final_df['reject_kast'] = (final_df['P_kast'] < 0.05).astype(int)
 final_df.to_csv('~/Desktop/CS Data/kd_kast_run_4.csv', index= False)
 '''
-run1 = pd.read_csv('~/Desktop/CS Data/kd_kast_run_1.csv')
-run2 = pd.read_csv('~/Desktop/CS Data/kd_kast_run_2.csv')
-run3 = pd.read_csv('~/Desktop/CS Data/kd_kast_run_3.csv')
-run4 = pd.read_csv('~/Desktop/CS Data/kd_kast_run_4.csv')
+run1 = pd.read_csv('~/Desktop/CS Data/Distribution Confirmation/kd_kast_run_1.csv')
+run2 = pd.read_csv('~/Desktop/CS Data/Distribution Confirmation/kd_kast_run_2.csv')
+run3 = pd.read_csv('~/Desktop/CS Data/Distribution Confirmation/kd_kast_run_3.csv')
+run4 = pd.read_csv('~/Desktop/CS Data/Distribution Confirmation/kd_kast_run_4.csv')
 
 random_sample = pd.concat([run1, run2, run3, run4])
 reject_kds_pct = []
@@ -70,5 +70,5 @@ for map_id in map_ids:
     total_N += [temp['N'].sum()]
 fdict = {'map' : maps, 'Total Sample Size' : total_N, 'Rejected_kd_%' : reject_kds_pct, 'Rejected_kast_%' : reject_kasts_pct}
 final_df = pd.DataFrame(fdict)
-final_df.to_csv('~/Desktop/CS Data/reject_pcts.csv', index= False)
+final_df.to_csv('~/Desktop/CS Data/Distribution Confirmation/reject_pcts.csv', index= False)
 
