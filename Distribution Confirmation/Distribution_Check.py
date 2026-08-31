@@ -48,12 +48,12 @@ fdict = {'player' : random_players, 'map' : tested_map,
          'Stats_kd' : shapiro_stats_kd, 'Stats_kast' : shapiro_stats_kast, 
          'P_kd' : shapiro_ps_kd, 'P_kast' : shapiro_ps_kast}
 final_df = pd.DataFrame(fdict)
-final_df['reject_kd'] = (final_df['P_kd'] < 0.05).astype(int)
-final_df['reject_kast'] = (final_df['P_kast'] < 0.05).astype(int)
+final_df['reject_kd']   = ((final_df['P_kd']   < 0.05) & (final_df['Stats_kd']   < 0.95)).astype(int)
+final_df['reject_kast'] = ((final_df['P_kast'] < 0.05) & (final_df['Stats_kast'] < 0.95)).astype(int)
 final_df.to_csv('~/Desktop/CS Data/kd_kast_run_4.csv', index= False)
 '''
 
-'''
+
 run1 = pd.read_csv('~/Desktop/CS Data/Distribution Confirmation/kd_kast_run_1.csv')
 run2 = pd.read_csv('~/Desktop/CS Data/Distribution Confirmation/kd_kast_run_2.csv')
 run3 = pd.read_csv('~/Desktop/CS Data/Distribution Confirmation/kd_kast_run_3.csv')
@@ -73,7 +73,7 @@ for map_id in map_ids:
 fdict = {'map' : maps, 'Total Sample Size' : total_N, 'Rejected_kd_%' : reject_kds_pct, 'Rejected_kast_%' : reject_kasts_pct}
 final_df = pd.DataFrame(fdict)
 final_df.to_csv('~/Desktop/CS Data/Distribution Confirmation/reject_pcts.csv', index= False)
-'''
+
 
 #Test assists distribution for Poisson / NB
 
@@ -159,7 +159,7 @@ final_df = pd.DataFrame(fin)
 final_df.to_csv('~/Desktop/CS Data/Distribution Confirmation/assists_run_4.csv', index= False)
 '''
 
-
+'''
 run1 = pd.read_csv('~/Desktop/CS Data/Distribution Confirmation/assists_run_1.csv')
 run2 = pd.read_csv('~/Desktop/CS Data/Distribution Confirmation/assists_run_2.csv')
 run3 = pd.read_csv('~/Desktop/CS Data/Distribution Confirmation/assists_run_3.csv')
@@ -183,4 +183,4 @@ for map_id in map_ids:
                 'Median_alpha' : temp['alpha_hat'].median()})
 final_df = pd.DataFrame(out)
 final_df.to_csv('~/Desktop/CS Data/Distribution Confirmation/assists_reject_pcts.csv', index= False)
-
+'''
