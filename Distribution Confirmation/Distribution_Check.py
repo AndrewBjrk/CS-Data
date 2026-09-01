@@ -60,6 +60,7 @@ run3 = pd.read_csv('~/Desktop/CS Data/Distribution Confirmation/kd_kast_run_3.cs
 run4 = pd.read_csv('~/Desktop/CS Data/Distribution Confirmation/kd_kast_run_4.csv')
 
 random_sample = pd.concat([run1, run2, run3, run4])
+random_sample = random_sample.drop_duplicates()
 reject_kds_pct = []
 reject_kasts_pct = []
 maps = []
