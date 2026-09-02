@@ -18,4 +18,5 @@ Understanding these distributions is key, because it allows for random sampling 
 
 One thing that I've never seen anyone really do before was compare the Round_Win_% against the Rank_Diff of two teams meeting each other. This is contained within /Round Win % & Rank Diff/. What you find is an absolutely beautiful distribution regardless of map:
 
+
 ![alt text](<Round Win Pct & Rank Diff/All_Maps_RoundWin_RankDiff_hist.png>)
