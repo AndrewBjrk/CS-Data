@@ -55,9 +55,13 @@ del raw_data, game_ids, n_splits, game_chunks
 raw_data = pd.read_csv('~/Desktop/CS Data/RoundWin%_vs_RankDiff.csv')
 figs = []
 img_paths = []
+fig3 = go.Figure()
+colors = px.colors.qualitative.Plotly
+i = 0
 for map_name in all_maps:
     temp = raw_data.loc[(raw_data['map'] == map_name)]
-    img_paths += [f"/Users/bjrk/Desktop/CS Data/Round Win Pct & Rank Diff/{map_name}_RoundWin_RankDiff.png", f"/Users/bjrk/Desktop/CS Data/Round Win Pct & Rank Diff/{map_name}_RoundWin_RankDiff_hist.png"]
+    img_paths += [f"/Users/bjrk/Desktop/CS Data/Round Win Pct & Rank Diff/{map_name}_RoundWin_RankDiff.png", 
+                  f"/Users/bjrk/Desktop/CS Data/Round Win Pct & Rank Diff/{map_name}_RoundWin_RankDiff_hist.png"]
 
     fig = go.Figure()
     fig2 = go.Figure()
@@ -68,6 +72,12 @@ for map_name in all_maps:
     fig2.add_trace(go.Histogram(x= temp['Rank_Diff'], y= temp['Round_Win_%'],
                                                 histnorm= 'probability density', 
                                                 name= 'Round_Win_% vs. Rank_Diff  ' + map_name))
-    
+    fig3.add_trace(go.Histogram(x= temp['Rank_Diff'], y= temp['Round_Win_%'],
+                                                    histnorm= 'probability density', 
+                                                    name= 'Round_Win_% vs. Rank_Diff All Maps',
+                                                    marker_color= colors[i]))
     figs += [fig, fig2]
+    i += 1
+figs += [fig3]
+img_paths += [f"/Users/bjrk/Desktop/CS Data/Round Win Pct & Rank Diff/All_Maps_RoundWin_RankDiff_hist.png"]
 plotly.io.write_images(figs, img_paths)

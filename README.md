@@ -16,7 +16,6 @@ Understanding these distributions is key, because it allows for random sampling 
 ![alt text](<Team Data/Falcons/NiKo_assists_dists.png>)
 ![alt text](<Team Data/Falcons/NiKo_kast_dists.png>)
 
-One thing that I've never seen anyone really do before was compare the Round_Win_% against the Rank_Diff of two teams meeting each other. This is contained within /Round Win % & Rank Diff/. What I've found is that it almost perfectly follows a Gaussian by map (shown below is Ancient aggregated by all possible data):
+One thing that I've never seen anyone really do before was compare the Round_Win_% against the Rank_Diff of two teams meeting each other. This is contained within /Round Win % & Rank Diff/. What you find is an absolutely beautiful distribution regardless of map:
 
-![alt text](image-1.png)
-![alt text](image-2.png)
+![alt text](<Round Win Pct & Rank Diff/All_Maps_RoundWin_RankDiff_hist.png>)
