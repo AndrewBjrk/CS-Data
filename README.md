@@ -15,4 +15,7 @@ Understanding these distributions is key, because it allows for random sampling 
 ![alt text](<Team Data/Falcons/NiKo_kd_diff_dists.png>), ![alt text](<Team Data/Falcons/NiKo_assists_dists.png>), ![alt text](<Team Data/Falcons/NiKo_kast_dists.png>)
 
 One thing that I've never seen anyone really do before was compare the Round_Win_% against the Rank_Diff of two teams meeting each other. This is contained within /Round Win % & Rank Diff/. What you find is an absolutely beautiful distribution regardless of map:
+
 ![alt text](<Round Win Pct & Rank Diff/All_Maps_RoundWin_RankDiff_hist.png>)
+
+Which makes sense, from a high level. Closely ranked teams would most likely have tight win probabilities, resulting in 13-11 / 13-10 / OT games. But if it ever happened, as an example you'd REALLY hope Team Spirit (#1) would handily defeat Rune Eaters (#100).
