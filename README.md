@@ -14,6 +14,6 @@ Understanding these distributions is key, because it allows for random sampling 
 
 ![alt text](<Team Data/Falcons/NiKo_kd_diff_dists.png>), ![alt text](<Team Data/Falcons/NiKo_assists_dists.png>), ![alt text](<Team Data/Falcons/NiKo_kast_dists.png>)
 
-If you're tricky with it, you can relate some known variables together through a regression and score player performance. From there, you can start plotting extra-dimensional hypersurfaces. Here's a 4D hypersurface of NiKo's performances on Ancient:
+If you're tricky with it, you can relate some known variables together through a regression and score player performance. From there, you can start plotting extra-dimensional hypersurfaces. Here's a 4D hypersurface of NiKo's performances on Ancient, where the cloud is the relevant population density function to compare his performances against the rest:
 
 ![alt text](hypersurface.png)
