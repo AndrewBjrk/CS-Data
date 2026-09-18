@@ -94,10 +94,10 @@ if __name__ == "__main__":
                                                     mode= 'markers'))
 
         fig2.add_trace(go.Histogram(x= temp['A_Rank_Diff'], y= temp['A_Round_Win_%'],
-                                                    histnorm= 'probability density', 
+                                                    histfunc= 'avg',
                                                     name= 'Round_Win_% vs. Rank_Diff  ' + map_name))
         fig3.add_trace(go.Histogram(x= temp['A_Rank_Diff'], y= temp['A_Round_Win_%'],
-                                                        histnorm= 'probability density', 
+                                                        histfunc= 'avg',
                                                         name= 'Round_Win_% vs. Rank_Diff ' + map_name,
                                                         marker_color= colors[i]))
         figs += [fig, fig2]
@@ -132,10 +132,10 @@ if __name__ == "__main__":
             temp = raw_data.loc[(raw_data['team'] == team) & (raw_data['map'] == map_id)]
 
             fig2.add_trace(go.Histogram(x= temp['Rank_Diff'], y= temp['Round_Win_%'],
-                                                    histnorm= 'probability density', 
+                                                    histfunc= 'avg',
                                                     name= 'Round_Win_% vs. Rank_Diff  ' + team + ' ' + map_id))
             fig.add_trace(go.Histogram(x= temp['Rank_Diff'], y= temp['Round_Win_%'],
-                                                        histnorm= 'probability density', 
+                                                        histfunc= 'avg',
                                                         name= 'Round_Win_% vs. Rank_Diff ' + team + ' ' + map_id,
                                                         marker_color= colors[i]))
             i += 1
